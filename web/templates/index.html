@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הבריף היומי שלי</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f1117;
+            color: #e8eaf0;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        header p {
+            color: #8892a4;
+            margin-top: 6px;
+            font-size: 0.95rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #1a1d27;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #2a2d3a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+        }
+
+        .card-sports::before { background: linear-gradient(90deg, #f97316, #fb923c); }
+        .card-center::before { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+        .card-finance::before { background: linear-gradient(90deg, #10b981, #34d399); }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            font-size: 1.6rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-sports .card-icon { background: rgba(249,115,22,0.15); }
+        .card-finance .card-icon { background: rgba(16,185,129,0.15); }
+        .card-center .card-icon { background: rgba(99,102,241,0.15); }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .card-subtitle {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .card-body {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #c8ccd6;
+        }
+
+        .card-body h3 {
+            color: #fff;
+            font-size: 0.95rem;
+            margin: 14px 0 6px;
+        }
+
+        .card-body strong { color: #fff; }
+
+        .card-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.85rem;
+        }
+
+        .card-body th {
+            background: #252836;
+            padding: 8px;
+            text-align: right;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        .card-body td {
+            padding: 8px;
+            border-bottom: 1px solid #2a2d3a;
+        }
+
+        .card-body ul {
+            padding-right: 18px;
+            margin: 8px 0;
+        }
+
+        .card-body li { margin: 4px 0; }
+
+        .card-body blockquote {
+            border-right: 3px solid #6366f1;
+            padding-right: 12px;
+            color: #9ca3af;
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        .center-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #2a2d3a;
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .refresh-btn:hover { background: #4f46e5; }
+
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>☀️ הבריף היומי שלי</h1>
+    <p id="date-display">טוען...</p>
+</header>
+
+<div class="grid">
+
+    <!-- ספורט -->
+    <div class="card card-sports">
+        <div class="card-header">
+            <div class="card-icon">🏀</div>
+            <div>
+                <div class="card-title">ספורט</div>
+                <div class="card-subtitle">NBA · שחקנים ישראלים</div>
+            </div>
+        </div>
+        <div class="card-body" id="sports-content">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                טוען נתוני ספורט...
+            </div>
+        </div>
+    </div>
+
+    <!-- אמצע: לוז + כושר -->
+    <div class="center-col">
+        <div class="card card-center">
+            <div class="card-header">
+                <div class="card-icon">📅</div>
+                <div>
+                    <div class="card-title">לוז היום</div>
+                    <div class="card-subtitle">Google Calendar</div>
+                </div>
+            </div>
+            <div class="card-body" id="calendar-content">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    טוען לוז...
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-center">
+            <div class="card-header">
+                <div class="card-icon">💪</div>
+                <div>
+                    <div class="card-title">אימון היום</div>
+                    <div class="card-subtitle">תכנית 10K sub-43</div>
+                </div>
+            </div>
+            <div class="card-body" id="fitness-content">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    טוען תכנית אימון...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- פיננסי -->
+    <div class="card card-finance">
+        <div class="card-header">
+            <div class="card-icon">📈</div>
+            <div>
+                <div class="card-title">שווקים</div>
+                <div class="card-subtitle">מניות · קריפטו</div>
+            </div>
+        </div>
+        <div class="card-body" id="finance-content">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                טוען נתוני שוק...
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<button class="refresh-btn" onclick="loadBrief()">🔄 רענן</button>
+
+<script>
+    async function loadBrief() {
+        document.getElementById("sports-content").innerHTML = '<div class="loading"><div class="loading-spinner"></div>טוען...</div>';
+        document.getElementById("finance-content").innerHTML = '<div class="loading"><div class="loading-spinner"></div>טוען...</div>';
+        document.getElementById("fitness-content").innerHTML = '<div class="loading"><div class="loading-spinner"></div>טוען...</div>';
+
+        const res = await fetch("/api/brief");
+        const data = await res.json();
+
+        document.getElementById("date-display").textContent = data.date;
+        document.getElementById("sports-content").innerHTML = marked.parse(data.sports);
+        document.getElementById("finance-content").innerHTML = marked.parse(data.finance);
+        document.getElementById("fitness-content").innerHTML = marked.parse(data.fitness);
+        document.getElementById("calendar-content").innerHTML = marked.parse(data.calendar);
+    }
+
+    loadBrief();
+</script>
+
+</body>
+</html>

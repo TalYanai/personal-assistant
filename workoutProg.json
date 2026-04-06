@@ -1,0 +1,136 @@
+{
+  "plan_name": "10K_sub_43_full_plan",
+  "version": "v1_basic",
+  "structure": "weekly_cycle",
+
+  "days": {
+    "Sunday": {
+      "title": "Upper Body Strength",
+      "type": "strength_upper",
+      "goal": "Build muscle and support running posture",
+      "workout": {
+        "warmup": "5-10 min light cardio + shoulder mobility",
+        "main": [
+          "Bench Press 3x8-10",
+          "Pull Ups / Lat Pulldown 3x8-10",
+          "Shoulder Press 3x10",
+          "Dumbbell Rows 3x10",
+          "Lateral Raises 3x12",
+          "Biceps Curl 3x12",
+          "Triceps Pushdown 3x12"
+        ],
+        "notes": [
+          "Controlled tempo",
+          "Leave 1-2 reps in reserve",
+          "Focus on good form"
+        ]
+      }
+    },
+
+    "Monday": {
+      "title": "Intervals Run",
+      "type": "run_intervals",
+      "goal": "Improve speed and VO2 max",
+      "workout": {
+        "warmup": "10 min easy jog + 3 strides",
+        "main": "6x400m @ 4:05-4:10 min/km pace",
+        "rest": "90 sec easy walk/jog between reps",
+        "cooldown": "10 min easy jog",
+        "notes": [
+          "Should feel hard but controlled",
+          "Do not start too fast",
+          "Consistency between reps is key"
+        ]
+      }
+    },
+
+    "Tuesday": {
+      "title": "Lower Body + Core",
+      "type": "strength_lower_core",
+      "goal": "Build leg strength and injury prevention",
+      "workout": {
+        "warmup": "5-10 min bike + dynamic leg mobility",
+        "main": [
+          "Squat 3x8",
+          "Romanian Deadlift 3x10",
+          "Walking Lunges 3x10 each leg",
+          "Hip Thrust 3x12"
+        ],
+        "core": [
+          "Plank 3x45 sec",
+          "Dead Bug 3x10 each side"
+        ],
+        "notes": [
+          "Full range of motion",
+          "Control the eccentric phase",
+          "Do not train to failure"
+        ]
+      }
+    },
+
+    "Wednesday": {
+      "title": "Rest / Recovery",
+      "type": "rest",
+      "goal": "Recovery and adaptation",
+      "workout": {
+        "optional": "Light walk or mobility work",
+        "notes": [
+          "Prioritize sleep",
+          "Hydration and nutrition matter",
+          "No intense activity"
+        ]
+      }
+    },
+
+    "Thursday": {
+      "title": "Easy Run",
+      "type": "run_easy",
+      "goal": "Aerobic base development",
+      "workout": {
+        "distance": "6 km",
+        "pace": "5:30-5:50 min/km",
+        "notes": [
+          "Must feel easy",
+          "You should be able to talk",
+          "If hard → slow down"
+        ]
+      }
+    },
+
+    "Friday": {
+      "title": "Upper Body (Pull Focus)",
+      "type": "strength_upper",
+      "goal": "Posture and upper back strength",
+      "workout": {
+        "warmup": "5 min light cardio",
+        "main": [
+          "Pull Ups / Lat Pulldown 3x8-10",
+          "Seated Row 3x10",
+          "Face Pulls 3x12",
+          "Rear Delt Raises 3x12",
+          "Biceps Curl 3x12"
+        ],
+        "notes": [
+          "Focus on back activation",
+          "Slow and controlled",
+          "Good posture throughout"
+        ]
+      }
+    },
+
+    "Saturday": {
+      "title": "Long Run",
+      "type": "run_long",
+      "goal": "Endurance and aerobic capacity",
+      "workout": {
+        "distance": "7-8 km",
+        "pace": "5:40-6:00 min/km",
+        "notes": [
+          "Keep it easy",
+          "Do not race this run",
+          "Build endurance gradually"
+        ]
+      }
+    }
+  }
+}
