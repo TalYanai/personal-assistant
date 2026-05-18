@@ -1,8 +1,14 @@
-# 🤖 Multi-Agent Personal Assistant
+# Multi-Agent Personal Assistant
 
-A production-deployed AI assistant system that runs 24/7 in the cloud, delivering a personalized daily brief every morning and answering natural language questions via Telegram — in Hebrew.
+[![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
+[![Claude API](https://img.shields.io/badge/Claude_API-D4A017?style=flat&logo=anthropic&logoColor=white)](https://anthropic.com)
+[![Telegram](https://img.shields.io/badge/Telegram_Bot-26A5E4?style=flat&logo=telegram&logoColor=white)](https://python-telegram-bot.org)
+[![Flask](https://img.shields.io/badge/Flask-000000?style=flat&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![Railway](https://img.shields.io/badge/Railway-0B0D0E?style=flat&logo=railway&logoColor=white)](https://railway.app)
 
-Built with **Claude AI** as the intelligence layer, coordinating specialized agents that pull real-time data from finance markets, NBA stats, Google Calendar, and personal fitness plans.
+A production-deployed AI assistant running 24/7 in the cloud. Every morning at 08:00 it sends a personalized daily brief; throughout the day it answers natural language questions via Telegram — routing each query to the right specialized agent automatically.
+
+Built with the **Claude API** as the intelligence and orchestration layer.
 
 ---
 
@@ -11,7 +17,7 @@ Built with **Claude AI** as the intelligence layer, coordinating specialized age
 ```
                         ┌─────────────────────┐
                         │     Orchestrator     │
-                        │   (Claude AI core)   │
+                        │   (Claude API core)  │
                         └──────────┬──────────┘
                                    │
           ┌────────────┬───────────┼───────────┬────────────┐
@@ -19,30 +25,38 @@ Built with **Claude AI** as the intelligence layer, coordinating specialized age
     ┌──────────┐ ┌──────────┐ ┌────────┐ ┌─────────┐ ┌──────────┐
     │  Sports  │ │ Finance  │ │Fitness │ │Calendar │ │  Mailer  │
     │  Agent   │ │  Agent   │ │ Agent  │ │  Agent  │ │  Agent   │
-    │(nba_api) │ │(yfinance)│ │  (JSON)│ │(Google) │ │ (Gmail)  │
+    │(nba_api) │ │(yfinance)│ │ (JSON) │ │(Google) │ │ (Gmail)  │
     └──────────┘ └──────────┘ └────────┘ └─────────┘ └──────────┘
                                    │
                   ┌────────────────┴─────────────────┐
                   ▼                                   ▼
         ┌──────────────────┐               ┌──────────────────┐
-        │   📧 Daily Email  │               │  💬 Telegram Bot  │
-        │  (08:00 morning  │               │ (Q&A on demand)  │
-        │     brief)       │               │                  │
+        │   Daily Email    │               │   Telegram Bot   │
+        │  (08:00 brief)   │               │  (Q&A on demand) │
         └──────────────────┘               └──────────────────┘
+                                   │
+                        ┌──────────▼──────────┐
+                        │   Flask Dashboard   │
+                        │  (status & logs)    │
+                        └─────────────────────┘
 ```
 
 ---
 
 ## Features
 
-- 🌅 **Daily Morning Brief** — Automated summary delivered every day at 08:00 covering markets, workouts, schedule, and NBA scores
-- 📈 **Finance Agent** — Tracks a stock watchlist (configurable) with daily price changes
-- 🏀 **Sports Agent** — Follows Israeli NBA players (Deni Avdija, Ben Saraf, Danny Wolf) with last-game stats
-- 💪 **Fitness Agent** — Reads a personalized weekly workout plan and generates a motivating daily coaching brief
-- 📅 **Calendar Agent** — Connects to Google Calendar and summarizes today's events across all calendars
-- 💬 **Telegram Q&A** — Ask questions in natural language (Hebrew or English) and get instant AI-powered answers
-- 🧠 **Smart Routing** — Classifies each question and runs only the relevant agent, avoiding unnecessary API calls
-- ☁️ **Cloud Deployed** — Runs 24/7 on Railway.app with zero maintenance
+| Agent | What It Does |
+|-------|-------------|
+| **Finance Agent** | Tracks a stock watchlist with daily price changes |
+| **Sports Agent** | Israeli NBA players (Deni Avdija, Ben Saraf, Danny Wolf) — last game stats |
+| **Fitness Agent** | Reads a personalized weekly workout plan and generates a motivating daily coaching brief |
+| **Calendar Agent** | Connects to Google Calendar API and summarizes today's events |
+| **Mailer Agent** | Composes and sends the full morning brief via Gmail |
+
+Additional capabilities:
+- **Smart routing** — classifies each Telegram message and runs only the relevant agent
+- **Bilingual** — understands Hebrew and English
+- **24/7 cloud deployment** — zero-maintenance production setup on Railway
 
 ---
 
@@ -50,16 +64,15 @@ Built with **Claude AI** as the intelligence layer, coordinating specialized age
 
 | Layer | Technology |
 |-------|-----------|
-| AI Intelligence | [Claude API](https://www.anthropic.com/) (`claude-opus-4-5`) |
-| Bot Interface | [python-telegram-bot](https://python-telegram-bot.org/) v22 |
-| Finance Data | [yfinance](https://github.com/ranaroussi/yfinance) |
-| Sports Data | [nba_api](https://github.com/swar/nba_api) |
-| Calendar | [Google Calendar API](https://developers.google.com/calendar) |
-| Email | Gmail SMTP via `smtplib` |
-| Scheduling | APScheduler (via python-telegram-bot job queue) |
+| AI / Orchestration | Claude API (`claude-opus-4-5`) |
+| Bot Interface | python-telegram-bot v22 |
+| Finance Data | yfinance |
+| Sports Data | nba_api |
+| Calendar | Google Calendar API (OAuth 2.0) |
+| Email | Gmail SMTP (`smtplib`) |
+| Scheduling | APScheduler |
 | Web Dashboard | Flask |
-| Deployment | [Railway.app](https://railway.app) |
-| Config | python-dotenv |
+| Deployment | Railway.app |
 
 ---
 
@@ -67,22 +80,20 @@ Built with **Claude AI** as the intelligence layer, coordinating specialized age
 
 ```
 personal-assistant/
-├── telegram_bot.py        # Main entry point — Telegram bot + scheduler
-├── orchestrator.py        # Composes daily brief from all agent outputs
-├── mailer.py              # Sends the daily brief via Gmail
-├── main.py                # CLI entry point for local testing
-├── workoutProg.json       # Weekly workout plan (personalized)
+├── telegram_bot.py        # Main entry — bot + scheduler
+├── orchestrator.py        # Composes daily brief from all agents
+├── mailer.py              # Sends brief via Gmail
+├── main.py                # CLI entry for local testing
+├── workoutProg.json       # Weekly workout plan
 ├── agents/
-│   ├── __init__.py
 │   ├── sports.py          # NBA stats for Israeli players
 │   ├── finance.py         # Stock market watchlist
-│   ├── fitness.py         # Daily workout coaching brief
+│   ├── fitness.py         # Daily workout coaching
 │   ├── calendar_agent.py  # Google Calendar integration
 │   └── scheduler.py       # Scheduling utilities
 ├── web/
-│   ├── app.py             # Flask web dashboard
-│   └── templates/
-│       └── index.html
+│   ├── app.py             # Flask dashboard
+│   └── templates/index.html
 ├── requirements.txt
 ├── Procfile               # Railway deployment config
 └── .gitignore
@@ -90,28 +101,19 @@ personal-assistant/
 
 ---
 
-## Setup
+## How to Run
 
-### 1. Clone the repository
+### 1. Clone and install
 
 ```bash
 git clone https://github.com/TalYanai/personal-assistant.git
 cd personal-assistant
-```
-
-### 2. Create a virtual environment and install dependencies
-
-```bash
 python -m venv venv
-source venv/bin/activate        # macOS/Linux
-venv\Scripts\activate           # Windows
-
+source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3. Create a `.env` file
-
-Create a `.env` file in the project root with the following variables:
+### 2. Create `.env`
 
 ```env
 ANTHROPIC_API_KEY=your_anthropic_api_key
@@ -122,82 +124,40 @@ GMAIL_APP_PASSWORD=your_gmail_app_password
 GMAIL_RECIPIENT=recipient_email_address
 ```
 
-> ⚠️ Never commit this file. It is listed in `.gitignore`.
+### 3. Google Calendar OAuth
 
-### 4. Google Calendar OAuth Setup
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) → enable **Google Calendar API**
+2. Create an OAuth 2.0 Client ID (Desktop App) → download as `credentials.json`
+3. Run the app — a browser prompt will authorize access and generate `token.json`
 
-The calendar agent uses the Google Calendar API with OAuth 2.0.
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project → enable the **Google Calendar API**
-3. Go to **Credentials** → **Create Credentials** → **OAuth 2.0 Client ID** → Desktop App
-4. Download the credentials file and save it as `credentials.json` in the project root
-5. On first run, you will be prompted to authorize access in your browser — a `token.json` file will be created automatically
-
-> Both `credentials.json` and `token.json` are excluded from git via `.gitignore`.
-
-### 5. Telegram Bot Setup
-
-1. Open Telegram and message [@BotFather](https://t.me/BotFather)
-2. Send `/newbot` and follow the prompts to get your **bot token**
-3. Start a conversation with your new bot and get your **chat ID** by messaging [@userinfobot](https://t.me/userinfobot)
-4. Add both values to your `.env` file
-
-### 6. Run locally
+### 4. Run locally
 
 ```bash
 python telegram_bot.py
 ```
 
-The bot will start polling for messages. Open Telegram and send it a message to test.
+### 5. Deploy to Railway
+
+1. Push to GitHub (`.env`, `credentials.json`, `token.json` are gitignored)
+2. [railway.app](https://railway.app) → New Project → Deploy from GitHub repo
+3. Add all `.env` variables in the Variables tab
+4. Railway reads `Procfile` and runs the bot as a worker process
 
 ---
 
-## Deploy to Railway
+## Example Queries
 
-1. Push your code to GitHub (sensitive files are gitignored)
-2. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo**
-3. Select this repository
-4. In the **Variables** tab, add all keys from your `.env` file
-5. Railway reads the `Procfile` and runs `python telegram_bot.py` as a worker process
-6. Your bot is now live 24/7 ☁️
-
----
-
-## Usage — What You Can Ask
-
-The Telegram bot understands questions in both **Hebrew and English** and routes them to the correct agent automatically.
-
-| Example Question | Agent Used |
-|-----------------|-----------|
-| `מה קורה עם המניות היום?` | Finance |
-| `How is the S&P doing?` | Finance |
-| `מה האימון שלי היום?` | Fitness |
+| Query | Agent Invoked |
+|-------|--------------|
+| `How is SPY doing today?` | Finance |
 | `What's my workout today?` | Fitness |
-| `מה יש לי ביומן?` | Calendar |
-| `Do I have any meetings today?` | Calendar |
-| `How much did SPY go up?` | Finance |
-| `תן לי סיכום כללי` | Finance + Fitness |
-
-> **Note:** NBA sports data is only available in the daily morning brief (08:00), as the NBA API is blocked on cloud servers. Sports questions via Telegram will return a friendly message explaining this.
-
----
-
-## Screenshots
-
-> Coming soon — Telegram conversation examples and daily brief samples
+| `Do I have any meetings?` | Calendar |
+| `מה קורה עם המניות?` | Finance |
+| `מה האימון שלי?` | Fitness |
 
 ---
 
 ## Author
 
-**Tal Yanai**
-MIS Student — Ben-Gurion University of the Negev
-
-- GitHub: [@TalYanai](https://github.com/TalYanai)
-
----
-
-## License
-
-This project is for personal use and portfolio demonstration purposes.
+**Tal Yanai** — MIS Student, Ben-Gurion University  
+GitHub: [@TalYanai](https://github.com/TalYanai)
