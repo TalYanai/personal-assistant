@@ -1,3 +1,4 @@
+import os
 import yfinance as yf
 import anthropic
 from dotenv import load_dotenv
@@ -5,7 +6,8 @@ from dotenv import load_dotenv
 load_dotenv()
 client = anthropic.Anthropic()
 
-WATCHLIST = ["SPY", "QQQ", "AAPL", "MSFT"]
+# Tickers come from the WATCHLIST environment variable (comma separated); these are neutral examples.
+WATCHLIST = [s.strip().upper() for s in os.environ.get("WATCHLIST", "SPY,QQQ,AAPL,MSFT").split(",") if s.strip()]
 
 def get_stock_data(ticker: str) -> dict:
     stock = yf.Ticker(ticker)

@@ -128,6 +128,7 @@ TELEGRAM_CHAT_ID=your_telegram_chat_id
 GMAIL_ADDRESS=your_gmail_address
 GMAIL_APP_PASSWORD=your_gmail_app_password
 GMAIL_RECIPIENT=recipient_email_address
+WATCHLIST=SPY,QQQ,AAPL,MSFT        # optional: tickers for the finance agent
 ```
 
 ### 3. Google Calendar OAuth
