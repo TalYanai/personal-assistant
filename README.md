@@ -6,7 +6,7 @@
 [![Flask](https://img.shields.io/badge/Flask-000000?style=flat&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
 [![Railway](https://img.shields.io/badge/Railway-0B0D0E?style=flat&logo=railway&logoColor=white)](https://railway.app)
 
-A production-deployed AI assistant running 24/7 in the cloud. Every morning at 08:00 it sends a personalized daily brief; throughout the day it answers natural language questions via Telegram — routing each query to the right specialized agent automatically.
+A Python multi-agent assistant. Every morning at 08:00 it can send a personalized daily brief; during the day it answers natural-language questions via Telegram, routing each question to a specialized agent.
 
 Built with the **Claude API** as the intelligence and orchestration layer.
 
@@ -47,16 +47,22 @@ Built with the **Claude API** as the intelligence and orchestration layer.
 
 | Agent | What It Does |
 |-------|-------------|
-| **Finance Agent** | Tracks a stock watchlist with daily price changes |
+| **Finance Agent** | Tracks a configurable stock watchlist with daily price changes |
 | **Sports Agent** | Israeli NBA players (Deni Avdija, Ben Saraf, Danny Wolf) — last game stats |
 | **Fitness Agent** | Reads a personalized weekly workout plan and generates a motivating daily coaching brief |
 | **Calendar Agent** | Connects to Google Calendar API and summarizes today's events |
 | **Mailer Agent** | Composes and sends the full morning brief via Gmail |
 
 Additional capabilities:
-- **Smart routing** — classifies each Telegram message and runs only the relevant agent
+- **Keyword routing** — Telegram messages are matched against Hebrew and English keyword lists, and only the relevant agent runs
 - **Bilingual** — understands Hebrew and English
-- **24/7 cloud deployment** — zero-maintenance production setup on Railway
+- **Deployment** — runs as a worker process (see `Procfile`); it ran on Railway for a period and is not running now
+
+---
+
+## Status
+
+A personal, single-user project. It is not running now. Routing is a keyword list, not a model decision. There are no automated tests and no CI.
 
 ---
 
